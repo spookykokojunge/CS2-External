@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34622.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imgui try h1", "Imgui try h1\Imgui try h1.csproj", "{C2496C97-255C-4E7E-8B15-F3E239DEA2B7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C2496C97-255C-4E7E-8B15-F3E239DEA2B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2496C97-255C-4E7E-8B15-F3E239DEA2B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2496C97-255C-4E7E-8B15-F3E239DEA2B7}.Debug|x64.ActiveCfg = Debug|x64
+		{C2496C97-255C-4E7E-8B15-F3E239DEA2B7}.Debug|x64.Build.0 = Debug|x64
+		{C2496C97-255C-4E7E-8B15-F3E239DEA2B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2496C97-255C-4E7E-8B15-F3E239DEA2B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2496C97-255C-4E7E-8B15-F3E239DEA2B7}.Release|x64.ActiveCfg = Release|x64
+		{C2496C97-255C-4E7E-8B15-F3E239DEA2B7}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C549389B-310F-4AD2-AE4D-797185F8D3D8}
+	EndGlobalSection
+EndGlobal
