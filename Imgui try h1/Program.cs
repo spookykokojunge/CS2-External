@@ -26,9 +26,9 @@ Entity localPlayer = new Entity();
 //Offsets
 
 //Offsets.cs <-- these normally update every game patch
-int dwEntityList = 0x18C9E78;
-int dwViewMatrix = 0x192B2C0;
-int dwLocalPlayerPawn = 0x173D5A8;
+int dwEntityList = 0x18C7F98;
+int dwViewMatrix = 0x1929430;
+int dwLocalPlayerPawn = 0x173B568;
 
 //Client.dll.cs
 int m_vOldOrigin = 0x127C; // Vector
