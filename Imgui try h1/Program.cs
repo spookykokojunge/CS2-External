@@ -1,4 +1,4 @@
-﻿using Imgui_try_h1;
+using Imgui_try_h1;
 using Swed64;
 using System.Numerics;
 using System.Reflection;
@@ -43,7 +43,6 @@ int m_iszPlayerName = 0x638;
 int m_pCameraServices = 0x1138;
 int m_iFOV = 0x210;
 int m_bIsScoped = 0x1400;
-int m_flFlashBangTime = 0x14B8;
 int m_pGameSceneNode = 0x318;
 int m_modelState = 0x160;
 
