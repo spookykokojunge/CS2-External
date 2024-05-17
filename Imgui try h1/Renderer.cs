@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ namespace Imgui_try_h1
     {
         //Render Variables
         public Vector2 screenSize = new Vector2(1920, 1080); //ScreenSize of your Screen
-        
+
         //entities copy , using more Threads is a safer method.
         private ConcurrentQueue<Entity> entities = new ConcurrentQueue<Entity>();
         private Entity localPlayer = new Entity();
@@ -28,7 +28,7 @@ namespace Imgui_try_h1
         private bool enableVisibilityCheck = true;
         public bool enableFOV = false;
 
-        public int fov = 60; //default fov
+        public int fov = 90; //default fov
 
         //collors
         private Vector4 enemyColor = new Vector4(1, 0, 0, 1); //Default Red
@@ -44,26 +44,53 @@ namespace Imgui_try_h1
 
         protected override void Render()
         {
-            //ImGui menu
+            ImGui.Begin("Zynx - Sookyisnice");
 
-            ImGui.Begin("Basic Cheat");
-            ImGui.Checkbox("ESP", ref  enableESP);
-            ImGui.Checkbox("Name", ref  enableName);
-            ImGui.Checkbox("VisCheck", ref  enableVisibilityCheck);
-            ImGui.Checkbox("Lines", ref enableLine);
-            ImGui.Checkbox("Health", ref enableHealth);
-            ImGui.Checkbox("FOV", ref enableFOV);
+            // Begin Tab Bar
+            if (ImGui.BeginTabBar("SettingsTabs"))
+            {
+                // ESP Tab
+                if (ImGui.BeginTabItem("ESP"))
+                {
+                    ImGui.Checkbox("ESP", ref enableESP);
+                    ImGui.Checkbox("Name", ref enableName);
+                    ImGui.Checkbox("VisCheck", ref enableVisibilityCheck);
+                    ImGui.Checkbox("Lines", ref enableLine);
+                    ImGui.Checkbox("Health", ref enableHealth);
+                    ImGui.EndTabItem();
+                }
 
-            ImGui.SliderInt("FOV",ref fov, 60, 140); //current, min, max
+                // FOV Tab
+                if (ImGui.BeginTabItem("FOV"))
+                {
+                    ImGui.Checkbox("FOV", ref enableFOV);
+                    ImGui.SliderInt("FOV", ref fov, 90, 140);
+                    ImGui.EndTabItem();
+                }
 
+                // Enemy Color Tab
+                if (ImGui.BeginTabItem("Enemy Color"))
+                {
+                    ImGui.ColorEdit4("##Enemy", ref enemyColor);
+                    ImGui.EndTabItem();
+                }
 
-            //enemy color
-            if (ImGui.CollapsingHeader("Enemy Color"))
-                ImGui.ColorPicker4("##Enemy", ref enemyColor);
+                // Bone Color Tab
+                if (ImGui.BeginTabItem("Bone Color"))
+                {
+                    ImGui.ColorEdit4("##Bone", ref boneColor);
+                    ImGui.EndTabItem();
+                }
 
-            //bone color
-            if (ImGui.CollapsingHeader("Bone Color"))
-                ImGui.ColorPicker4("##Enemy", ref boneColor);
+                // Name Color Tab
+                if (ImGui.BeginTabItem("Name Color"))
+                {
+                    ImGui.ColorEdit4("##Name", ref nameColor);
+                    ImGui.EndTabItem();
+                }
+
+                ImGui.EndTabBar();
+            }
 
 
             //Draw Overlay
@@ -73,20 +100,21 @@ namespace Imgui_try_h1
             //draw stuff
             if (enableESP)
             {
-                foreach(var entity in entities)
+                foreach (var entity in entities)
                 {
-                    if (EntityOnScreen(entity) && localPlayer.team != entity.team) {
-                                            //Check If Entity On Screen
-                        if (EntityOnScreen(entity))
+                    if (EntityOnScreen(entity) && localPlayer.team != entity.team)
                     {
-                        //Draw Methods
-                        DrawBox(entity);
-                        DrawLine(entity);
-                        DrawHealthBar(entity);
-                        DrawName(entity,20);
-                        DrawBones(entity);
-                    
-                    }
+                        //Check If Entity On Screen
+                        if (EntityOnScreen(entity))
+                        {
+                            //Draw Methods
+                            DrawBox(entity);
+                            DrawLine(entity);
+                            DrawHealthBar(entity);
+                            DrawName(entity, 20);
+                            DrawBones(entity);
+
+                        }
 
                     }
                 }
@@ -123,17 +151,17 @@ namespace Imgui_try_h1
             drawList.AddLine(entity.bones2d[0], entity.bones2d[9], uintColor, currentBoneThickness); //waist to kneeLeft
             drawList.AddLine(entity.bones2d[0], entity.bones2d[11], uintColor, currentBoneThickness); //waist to kneeRight
             drawList.AddLine(entity.bones2d[9], entity.bones2d[10], uintColor, currentBoneThickness); //kneeLeft to feetLeft
-            drawList.AddLine(entity.bones2d[11], entity.bones2d[12], uintColor, currentBoneThickness); //knee to idk
-            drawList.AddCircle(entity.bones2d[2], 3 + currentBoneThickness, uintColor);
+            drawList.AddLine(entity.bones2d[11], entity.bones2d[12], uintColor, currentBoneThickness); //knee to feetRight
+            drawList.AddCircle(entity.bones2d[2], 3 + currentBoneThickness, uintColor); //circle on head
         }
 
 
         private void DrawName(Entity entity, int yOffset)
         {
-            if (enableName) 
-            {    
-            Vector2 textLocation = new Vector2(entity.viewPositon2D.X, entity.viewPositon2D.Y - yOffset); //Get render location of name
-            drawList.AddText(textLocation, ImGui.ColorConvertFloat4ToU32(nameColor), $"{entity.name}"); //Draw on screen
+            if (enableName)
+            {
+                Vector2 textLocation = new Vector2(entity.viewPositon2D.X, entity.viewPositon2D.Y - yOffset); //Get render location of name
+                drawList.AddText(textLocation, ImGui.ColorConvertFloat4ToU32(nameColor), $"{entity.name}"); //Draw on screen
             }
 
         }
@@ -175,7 +203,7 @@ namespace Imgui_try_h1
                 drawList.AddRectFilled(barTop, barBottom, ImGui.ColorConvertFloat4ToU32(barColor));
 
             }
-            
+
 
 
         }
@@ -241,7 +269,7 @@ namespace Imgui_try_h1
 
         public Entity GetLocalPlayer() //Get Localplayer
         {
-            lock(entityLock)
+            lock (entityLock)
             {
                 return localPlayer;
             }
