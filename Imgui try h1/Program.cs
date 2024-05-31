@@ -112,7 +112,7 @@ while (true)
 
 
         entities.Add(entity);
-
+//remove from here to ... to remove fov changer.
         uint desiredFov = (uint)renderer.fov;
 
 
@@ -135,7 +135,7 @@ while (true)
 
         }
 
-
+//to here remove
 
 
     }
