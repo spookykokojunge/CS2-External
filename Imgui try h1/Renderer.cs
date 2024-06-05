@@ -133,8 +133,8 @@ namespace Imgui_try_h1
             drawList.AddLine(entity.bones2d[1], entity.bones2d[2], uintColor, currentBoneThickness); //neckt to head
             drawList.AddLine(entity.bones2d[1], entity.bones2d[3], uintColor, currentBoneThickness); //neck to left shoulder
             drawList.AddLine(entity.bones2d[1], entity.bones2d[6], uintColor, currentBoneThickness); //neck to right shoulder
-            drawList.AddLine(entity.bones2d[3], entity.bones2d[4], uintColor, currentBoneThickness); //shoulderRight to ar
-            drawList.AddLine(entity.bones2d[6], entity.bones2d[7], uintColor, currentBoneThickness); //shoulderLeft to ar
+            drawList.AddLine(entity.bones2d[3], entity.bones2d[4], uintColor, currentBoneThickness); //shoulderRight to arm
+            drawList.AddLine(entity.bones2d[6], entity.bones2d[7], uintColor, currentBoneThickness); //shoulderLeft to arm
             drawList.AddLine(entity.bones2d[4], entity.bones2d[5], uintColor, currentBoneThickness); //armLeft to handLeft
             drawList.AddLine(entity.bones2d[7], entity.bones2d[8], uintColor, currentBoneThickness); //armRight to rightHand
             drawList.AddLine(entity.bones2d[1], entity.bones2d[0], uintColor, currentBoneThickness); //neck to waist
