@@ -68,26 +68,16 @@ namespace Imgui_try_h1
                     ImGui.EndTabItem();
                 }
 
-                // Enemy Color Tab
-                if (ImGui.BeginTabItem("Enemy Color"))
+                // Color Tab
+                if (ImGui.BeginTabItem("Colors"))
                 {
                     ImGui.ColorEdit4("##Enemy", ref enemyColor);
-                    ImGui.EndTabItem();
-                }
-
-                // Bone Color Tab
-                if (ImGui.BeginTabItem("Bone Color"))
-                {
                     ImGui.ColorEdit4("##Bone", ref boneColor);
-                    ImGui.EndTabItem();
-                }
-
-                // Name Color Tab
-                if (ImGui.BeginTabItem("Name Color"))
-                {
                     ImGui.ColorEdit4("##Name", ref nameColor);
                     ImGui.EndTabItem();
                 }
+
+
 
                 ImGui.EndTabBar();
             }
