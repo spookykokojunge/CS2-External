@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
 using System.Threading.Tasks;
 using ClickableTransparentOverlay;
 using ImGuiNET;
@@ -12,15 +11,11 @@ namespace Imgui_try_h1
 {
     public class Renderer : Overlay
     {
-        // Render Variables
-        public Vector2 screenSize = new Vector2(1920, 1080); // Screen size
-
-        // Entities, using concurrent collection for thread safety
+        public Vector2 screenSize = new Vector2(1920, 1080);
         private ConcurrentQueue<Entity> entities = new ConcurrentQueue<Entity>();
         private Entity localPlayer = new Entity();
         private readonly object entityLock = new object();
 
-        // GUI Elements Variables
         private bool enableESP = true;
         private bool enableLine = false;
         private bool enableHealth = true;
@@ -28,34 +23,30 @@ namespace Imgui_try_h1
         private bool enableVisibilityCheck = false;
         private bool enableBox = false;
         private bool enableBone = true;
-        private bool enableTeammateESP = false; // New variable to enable/disable ESP for teammates
+        private bool enableTeammateESP = false;
 
-        // Colors
-        private Vector4 enemyColor = new Vector4(1, 0, 0, 1); // Red
-        private Vector4 teamColor = new Vector4(0, 1, 0, 1); // Green
-        private Vector4 hiddenColor = new Vector4(0, 0, 0, 1); // Black
-        private Vector4 nameColor = new Vector4(1, 1, 1, 1); // White
-        private Vector4 boneColor = new Vector4(1, 1, 1, 1); // White
-        private Vector4 lowHealthColor = new Vector4(1, 1, 0, 1); // Yellow
-        private Vector4 criticalHealthColor = new Vector4(1, 0.5f, 0, 1); // Orange
+        private Vector4 enemyColor = new Vector4(1, 0, 0, 1);
+        private Vector4 teamColor = new Vector4(0, 1, 0, 1);
+        private Vector4 hiddenColor = new Vector4(0, 0, 0, 1);
+        private Vector4 nameColor = new Vector4(1, 1, 1, 1);
+        private Vector4 boneColor = new Vector4(1, 1, 1, 1);
+        private Vector4 lowHealthColor = new Vector4(1, 1, 0, 1);
+        private Vector4 criticalHealthColor = new Vector4(1, 0.5f, 0, 1);
 
-        float boneThickness = 4;
-
-        // Draw list
-        ImDrawListPtr drawList;
+        private float boneThickness = 4;
+        private ImDrawListPtr drawList;
 
         protected override void Render()
         {
             ImGuiStylePtr style = ImGui.GetStyle();
-
             style.WindowBorderSize = 1f;
             style.WindowRounding = 8f;
-            style.Colors[(int)ImGuiCol.Border] = new Vector4(252 / 255f, 106 / 255f, 0 / 255f, 1f);
-            style.Colors[(int)ImGuiCol.TitleBgActive] = new Vector4(252 / 255f, 106 / 255f, 0 / 255f, 1f);
-            style.Colors[(int)ImGuiCol.Text] = new Vector4(1,1,1,1f);
-            style.Colors[(int)ImGuiCol.Tab] = new Vector4(252 / 255f, 106 / 255f, 0 / 255f, 1f);
-            style.Colors[(int)ImGuiCol.TabActive] = new Vector4(252 / 255f, 106 / 255f, 0 / 255f, 1f);
-            style.Colors[(int)ImGuiCol.TabHovered] = new Vector4(232 / 255f, 90 / 255f, 0 / 255f, 1f);
+            style.Colors[(int)ImGuiCol.Border] = new Vector4(232 / 255f, 90 / 255f, 0 / 255f, 1f); // Slightly darker color
+            style.Colors[(int)ImGuiCol.TitleBgActive] = style.Colors[(int)ImGuiCol.Border];
+            style.Colors[(int)ImGuiCol.Text] = new Vector4(1, 1, 1, 1f);
+            style.Colors[(int)ImGuiCol.Tab] = style.Colors[(int)ImGuiCol.Border];
+            style.Colors[(int)ImGuiCol.TabActive] = style.Colors[(int)ImGuiCol.Border];
+            style.Colors[(int)ImGuiCol.TabHovered] = new Vector4(212 / 255f, 80 / 255f, 0 / 255f, 1f);
 
             ImGui.Begin("Zynx - Sookyisnice");
 
@@ -101,7 +92,7 @@ namespace Imgui_try_h1
             ImGui.Checkbox("VisCheck", ref enableVisibilityCheck);
             ImGui.Checkbox("Lines", ref enableLine);
             ImGui.Checkbox("Health", ref enableHealth);
-            ImGui.Checkbox("Teammate ESP", ref enableTeammateESP); // New checkbox for teammate ESP
+            ImGui.Checkbox("Teammate ESP", ref enableTeammateESP);
         }
 
         private void RenderColorSettings()
@@ -115,11 +106,11 @@ namespace Imgui_try_h1
 
         private void DrawEntity(Entity entity)
         {
-            DrawBox(entity);
-            DrawLine(entity);
-            DrawHealthBar(entity);
-            DrawName(entity, 20);
-            DrawBones(entity);
+            if (enableBox) DrawBox(entity);
+            if (enableLine) DrawLine(entity);
+            if (enableHealth) DrawHealthBar(entity);
+            if (enableName) DrawName(entity, 20);
+            if (enableBone) DrawBones(entity);
         }
 
         private bool EntityOnScreen(Entity entity)
@@ -130,136 +121,78 @@ namespace Imgui_try_h1
 
         private void DrawBones(Entity entity)
         {
-            if (!enableBone) return;
-
             uint color = ImGui.ColorConvertFloat4ToU32(boneColor);
             float thickness = boneThickness / entity.distance;
 
-            drawList.AddLine(entity.bones2d[1], entity.bones2d[2], color, thickness);
-            drawList.AddLine(entity.bones2d[1], entity.bones2d[3], color, thickness);
-            drawList.AddLine(entity.bones2d[1], entity.bones2d[6], color, thickness);
-            drawList.AddLine(entity.bones2d[3], entity.bones2d[4], color, thickness);
-            drawList.AddLine(entity.bones2d[6], entity.bones2d[7], color, thickness);
-            drawList.AddLine(entity.bones2d[4], entity.bones2d[5], color, thickness);
-            drawList.AddLine(entity.bones2d[7], entity.bones2d[8], color, thickness);
-            drawList.AddLine(entity.bones2d[1], entity.bones2d[0], color, thickness);
-            drawList.AddLine(entity.bones2d[0], entity.bones2d[9], color, thickness);
-            drawList.AddLine(entity.bones2d[0], entity.bones2d[11], color, thickness);
-            drawList.AddLine(entity.bones2d[9], entity.bones2d[10], color, thickness);
-            drawList.AddLine(entity.bones2d[11], entity.bones2d[12], color, thickness);
-            drawList.AddCircle(entity.bones2d[2], 3 + thickness, color);
+            var bones = entity.bones2d;
+            drawList.AddLine(bones[1], bones[2], color, thickness);
+            drawList.AddLine(bones[1], bones[3], color, thickness);
+            drawList.AddLine(bones[1], bones[6], color, thickness);
+            drawList.AddLine(bones[3], bones[4], color, thickness);
+            drawList.AddLine(bones[6], bones[7], color, thickness);
+            drawList.AddLine(bones[4], bones[5], color, thickness);
+            drawList.AddLine(bones[7], bones[8], color, thickness);
+            drawList.AddLine(bones[1], bones[0], color, thickness);
+            drawList.AddLine(bones[0], bones[9], color, thickness);
+            drawList.AddLine(bones[0], bones[11], color, thickness);
+            drawList.AddLine(bones[9], bones[10], color, thickness);
+            drawList.AddLine(bones[11], bones[12], color, thickness);
+            drawList.AddCircle(bones[2], 3 + thickness, color);
         }
 
         private void DrawName(Entity entity, int yOffset)
         {
-            if (!enableName) return;
-
             Vector2 textLocation = new Vector2(entity.viewPositon2D.X, entity.viewPositon2D.Y - yOffset);
             drawList.AddText(textLocation, ImGui.ColorConvertFloat4ToU32(nameColor), entity.name);
         }
 
         private void DrawHealthBar(Entity entity)
         {
-            if (!enableHealth) return;
-
-            // Calculate bar height
             float entityHeight = entity.position2D.Y - entity.viewPositon2D.Y;
-
-            // Get box location
             float boxLeft = entity.viewPositon2D.X - entityHeight / 3;
             float boxRight = entity.position2D.X + entityHeight / 3;
-
-            // Calculate health bar width
-            float barPercentWidth = 0.05f; // 5% or 1/20 of box width
-            float barPixelWidth = barPercentWidth * (boxRight - boxLeft);
-
-            // Calculate bar height after health
+            float barPixelWidth = 0.05f * (boxRight - boxLeft);
             float barHeight = entityHeight * (entity.health / 100f);
-
-            // Calculate bar rectangle, two vectors
             Vector2 barTop = new Vector2(boxLeft - barPixelWidth, entity.position2D.Y - barHeight);
             Vector2 barBottom = new Vector2(boxLeft, entity.position2D.Y);
 
-            // Determine bar color based on health
             Vector4 barColor;
-            if (entity.health < 10)
-            {
-                barColor = new Vector4(1, 0, 0, 1); // Red
-            }
-            else if (entity.health < 25)
-            {
-                barColor = new Vector4(1, 0.5f, 0, 1); // Orange
-            }
-            else if (entity.health < 50)
-            {
-                barColor = new Vector4(1, 1, 0, 1); // Yellow
-            }
-            else if (entity.health < 75)
-            {
-                barColor = new Vector4(0.5f, 1, 0, 1); // Lime Green
-            }
-            else
-            {
-                barColor = new Vector4(0, 1, 0, 1); // Green
-            }
+            if (entity.health < 10) barColor = new Vector4(1, 0, 0, 1);
+            else if (entity.health < 25) barColor = new Vector4(1, 0.5f, 0, 1);
+            else if (entity.health < 50) barColor = new Vector4(1, 1, 0, 1);
+            else if (entity.health < 75) barColor = new Vector4(0.5f, 1, 0, 1);
+            else barColor = new Vector4(0, 1, 0, 1);
 
-            // Draw health bar
             drawList.AddRectFilled(barTop, barBottom, ImGui.ColorConvertFloat4ToU32(barColor));
 
-            // Draw health text
             string healthText = entity.health.ToString();
             Vector2 textSize = ImGui.CalcTextSize(healthText);
             Vector2 textPosition = new Vector2(barTop.X - textSize.X - 2, barTop.Y - textSize.Y / 2);
 
-            // Determine text color based on health
             Vector4 textColor;
-            if (entity.health < 20)
-            {
-                textColor = new Vector4(1, 0, 0, 1); // Red
-            }
-            else if (entity.health < 40)
-            {
-                textColor = new Vector4(1, 0.5f, 0, 1); // Orange
-            }
-            else if (entity.health < 60)
-            {
-                textColor = new Vector4(1, 1, 0, 1); // Yellow
-            }
-            else if (entity.health < 80)
-            {
-                textColor = new Vector4(0.5f, 1, 0, 1); // Lime Green
-            }
-            else
-            {
-                textColor = new Vector4(1, 1, 1, 1); // White
-            }
+            if (entity.health < 20) textColor = new Vector4(1, 0, 0, 1);
+            else if (entity.health < 40) textColor = new Vector4(1, 0.5f, 0, 1);
+            else if (entity.health < 60) textColor = new Vector4(1, 1, 0, 1);
+            else if (entity.health < 80) textColor = new Vector4(0.5f, 1, 0, 1);
+            else textColor = new Vector4(1, 1, 1, 1);
 
-            // Draw health text
             drawList.AddText(textPosition, ImGui.ColorConvertFloat4ToU32(textColor), healthText);
         }
 
-
-
         private void DrawBox(Entity entity)
         {
-            if (!enableBox) return;
-
             float entityHeight = entity.position2D.Y - entity.viewPositon2D.Y;
             Vector2 rectTop = new Vector2(entity.viewPositon2D.X - entityHeight / 3, entity.viewPositon2D.Y);
             Vector2 rectBottom = new Vector2(entity.position2D.X + entityHeight / 3, entity.position2D.Y);
 
             Vector4 boxColor = localPlayer.team == entity.team ? teamColor : enemyColor;
-
-            if (enableVisibilityCheck)
-                boxColor = entity.spotted ? boxColor : hiddenColor;
+            if (enableVisibilityCheck) boxColor = entity.spotted ? boxColor : hiddenColor;
 
             drawList.AddRect(rectTop, rectBottom, ImGui.ColorConvertFloat4ToU32(boxColor));
         }
 
         private void DrawLine(Entity entity)
         {
-            if (!enableLine) return;
-
             Vector4 lineColor = localPlayer.team == entity.team ? teamColor : enemyColor;
             drawList.AddLine(new Vector2(screenSize.X / 2, screenSize.Y), entity.position2D, ImGui.ColorConvertFloat4ToU32(lineColor));
         }
@@ -274,7 +207,7 @@ namespace Imgui_try_h1
             lock (entityLock)
             {
                 localPlayer = newEntity;
-            }
+            }   
         }
 
         public Entity GetLocalPlayer()
