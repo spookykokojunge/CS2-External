@@ -9,9 +9,11 @@ namespace Imgui_try_h1
     // Define offsets as constants
     public static class Offsets
     {
+        //these normally change all the time!
         public const int dwEntityList = 0x19B49B8;
-        public const int dwViewMatrix = 0x1A16A70;
-        public const int dwLocalPlayerPawn = 0x181A998;
+        public const int dwViewMatrix = 0x1A16A60;
+        public const int dwLocalPlayerPawn = 0x181A9C8;
+        //change almost never.
         public const int m_vOldOrigin = 0x1274;
         public const int m_iTeamNum = 0x3C3;
         public const int m_lifeState = 0x328;
